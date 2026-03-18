@@ -1,5 +1,22 @@
-# Skilly — A Parallel Guardian Pattern for Improving LLM Systems  
-*A new cognitive architecture for tool-aware, reliable AI pipelines.*
+# Skilly-pgp  
+### A Parallel Guardian Pattern for Reliable AI Systems
+
+> A deterministic oversight layer for LLM-based systems — improving intent detection, tool execution, and overall reliability.
+
+---
+
+![status](https://img.shields.io/badge/status-experimental-blue)
+![pattern](https://img.shields.io/badge/architecture-Parallel%20Guardian%20Pattern-purple)
+![focus](https://img.shields.io/badge/focus-reliability%20over%20guessing-orange)
+
+---
+
+⚠️ This repository is a **conceptual reference implementation**.  
+The focus is on architecture and pattern design, not production completeness.
+
+---
+
+*A lightweight cognitive architecture for reliable, tool-aware AI systems.*
 
 Skilly is the reference implementation of the **Parallel Guardian Pattern (PGP)**,  
 a design approach that lets a deterministic, embedding-based guardian agent  
@@ -20,7 +37,27 @@ This is a minimal example showing how Skilly detects intent and supports action 
 
 ```bash
 pip install sentence-transformers numpy scikit-learn torch
-2. Basic Intent Detection
+```
+
+---
+
+## 🔗 Embedding Models
+
+Skilly relies on embedding-based semantic matching.  
+Any modern embedding model can be used.
+
+**Examples:**
+
+- BAAI/bge-small-en-v1.5 (default in this repo)  
+- sentence-transformers/all-MiniLM-L6-v2  
+
+The architecture is model-agnostic — the key value lies in how embeddings are used, not which model is selected.
+
+---
+
+### 2. Basic Intent Detection
+
+```python
 from skilly.core.intent_detector import Skilly
 
 skilly = Skilly()
@@ -30,7 +67,13 @@ result = skilly.analyze("user", "List files in my documents folder")
 print(result.intent)        # filesystem.list
 print(result.confidence)    # 0.87
 print(result.actionable)    # True
-3. Tool Routing Example
+```
+
+---
+
+### 3. Tool Routing Example
+
+```python
 from skilly.core.guardian_agent import skilly_route_tool
 
 tools = [
@@ -44,16 +87,20 @@ routing = skilly_route_tool(
 )
 
 print(routing)
-4. Parallel Guardian Pattern (Minimal)
+```
+
+---
+
+### 4. Parallel Guardian Pattern (Minimal)
+
+```python
 from skilly.core.intent_detector import Skilly
 
 skilly = Skilly()
 
 def process(user_input):
-    # Simulated LLM response
     llm_response = f"LLM: {user_input}"
 
-    # Skilly runs in parallel
     intent = skilly.analyze("user", user_input)
 
     if intent.actionable and intent.confidence > 0.8:
@@ -65,139 +112,119 @@ def process(user_input):
     return {"llm": llm_response}
 
 print(process("List files in /var/log"))
-🌟 Why This Pattern Matters
+```
+
+---
+
+## 🌟 Why This Pattern Matters
 
 Mainstream LLM systems still treat tool use as a sequential pipeline:
 
+```
 User → LLM → function_call → tool → LLM → user
+```
 
 This approach often struggles with:
 
-missed tool intents
+- missed tool intents  
+- inconsistent function calls  
+- hallucinated actions  
+- high latency  
+- heavy reliance on a single model’s reasoning  
 
-inconsistent function calls
+The Parallel Guardian Pattern (PGP) corrects these weaknesses by introducing  
+a second evaluation layer that operates independently of the LLM’s reasoning.
 
-hallucinated actions
+---
 
-high latency
+## 🧠 The Parallel Guardian Pattern (PGP)
 
-heavy reliance on a single model’s reasoning
+PGP introduces two complementary cognitive tracks:
 
-The Parallel Guardian Pattern (PGP) corrects these weaknesses by
-introducing a second evaluation layer that operates independently
-of the LLM’s creative reasoning.
+### 1. Creative Track (LLM)
 
-🧠 The Parallel Guardian Pattern (PGP)
+Handles:
+- language  
+- reasoning  
+- conversation  
 
-PGP introduces two separate, complementary cognitive tracks:
-
-1. Creative Track (LLM)
-
-Handles natural language, nuance, reasoning, conversation, narrative.
-
-2. Guardian Track (Skilly)
+### 2. Guardian Track (Skilly)
 
 An embedding-based intent engine that:
 
-detects tool-relevant semantics
+- detects tool-relevant semantics  
+- operates deterministically  
+- reacts in milliseconds  
+- intervenes when needed  
 
-operates deterministically
+> A creative AI supported by a deterministic semantic watchdog.
 
-reacts in milliseconds
+---
 
-intervenes when the LLM misses an action
-
-Together:
-
-A creative AI supported by a deterministic semantic watchdog
-that only steps in when action is actually required.
-
-🔥 Why Embeddings?
+## 🔥 Why Embeddings?
 
 Embeddings are:
 
-deterministic
+- deterministic  
+- stable  
+- fast  
+- robust  
 
-stable
+This makes them ideal for:
 
-geometric
+- file operations  
+- system actions  
+- search  
+- structured tasks  
 
-extremely fast
+LLMs imagine.  
+Embeddings provide signal.
 
-robust even in long conversations
+---
 
-This makes them well-suited for detecting:
+## 🔧 How Skilly Works (Flow)
 
-file operations
-
-system interactions
-
-searches
-
-device actions
-
-structured tasks
-
-LLMs can imagine.
-Embeddings provide stable signal.
-PGP leverages that difference.
-
-🔧 How Skilly Works (Flow)
+```
 User Message
-├──→ LLM: generates a natural-language reply
-└──→ Skilly: embedding-based intent detection
+├──→ LLM (response)
+└──→ Skilly (intent detection)
 
-        if high-confidence tool-intent
-                    ↓
-     Skilly suggests or triggers action
+        if high-confidence
+                ↓
+        action triggered
+```
 
-The orchestrator then:
+---
 
-executes the appropriate skill
+## ⚡ Advantages of PGP
 
-returns the result
+- ✔ Instant responses  
+- ✔ Reduced hallucination risk  
+- ✔ Transparent control  
+- ✔ Backend-agnostic  
+- ✔ Lower latency  
 
-feeds it back into the LLM
+---
 
-All without delaying the initial answer.
+## 🧩 Example
 
-⚡ Advantages of PGP
-✔ Instant responses
-
-While the LLM talks, Skilly evaluates in parallel.
-
-✔ Reduced hallucination risk in action detection
-
-Because action detection is separated from generative reasoning.
-
-✔ Transparent oversight
-
-User sees when Skilly intervenes and why.
-
-✔ Backend-agnostic
-
-Works with local LLMs, cloud models, llama.cpp, Mistral, OpenAI, Anthropic…
-
-✔ Natural self-improvement
-
-Tool outcomes feed back into the intent engine.
-
-🧩 Example
-
-User:
+**User:**  
 “Can you check the log files in folder X?”
 
-LLM:
+**LLM:**  
 “Sure, those logs often contain valuable information.”
 
-Skilly:
-“High-confidence filesystem intent detected.
-Would you like me to list the files in folder X?”
+**Skilly:**  
+“High-confidence filesystem intent detected.”
 
-Result:
-Tool executes → result returns → LLM finalizes with real data.
+**Result:**  
+Tool executes → result returned → LLM finalizes response
 
-🏗 Architecture Overview
+---
+
+## 🏗 Architecture Overview
+
+```
         ┌─────────────────────────────┐
         │             User             │
         └─────────────┬───────────────┘
@@ -206,48 +233,46 @@ Tool executes → result returns → LLM finalizes with real data.
     │                                   │
 ┌───────▼────────┐        ┌──────────▼─────────┐
 │ Creative LLM   │        │ Skilly Guardian     │
-│ (Parallel Eval)│        │ (Embedding Intent)  │
 └───────┬────────┘        └──────────┬──────────┘
         │                             │
-        │ Natural Reply               │ Intervention
         └───────────────┬─────────────┘
                         │
               ┌─────────▼─────────┐
-              │ Tool / Skill Layer │
+              │ Tool Layer        │
               └─────────┬─────────┘
                         │
-                  Tool Results
-                        │
               ┌─────────▼─────────┐
-              │ Final LLM Output   │
+              │ Final Output       │
               └────────────────────┘
-🧬 Core Ideas
+```
 
-Parallel evaluation > sequential pipelines
+---
 
-Reliability must be designed, not assumed
+## 🧬 Core Ideas
 
-Embeddings provide stable intent detection
+- Parallel > sequential  
+- Reliability must be designed  
+- Embeddings provide stability  
+- LLMs are not execution engines  
+- Separation of concerns  
 
-LLMs excel at reasoning, not execution decisions
+---
 
-Systems benefit from layered responsibility
+## 🌐 Part of a Larger Vision
 
-🌐 Part of a Larger Vision
+Skilly fits into a broader modular AI ecosystem where agents, tools, and reasoning  
+layers are composed into reliable systems.
 
-Skilly and the Parallel Guardian Pattern (PGP) are components of a broader
-modular ecosystem focused on building flexible, low-latency, reliable AI orchestration.
-This approach integrates naturally into systems such as AI_MASTERMIND, where agents, tools,
-and cognition layers work together in a composable architecture.
+---
 
-🚧 Proof-of-Concept
+## 🚧 Proof-of-Concept
 
-A full proof-of-concept implementing Skilly and the Parallel Guardian Pattern
-is underway and will be published here soon.
+A full implementation will be published soon.
 
-💬 Footnote — Why I am Building This
+---
 
-If you're part of an innovative tech environment with likeminded people
-who enjoy analysing, challenging and improving complex systems, feel free to reach out.
+## 💬 Why I’m Building This
 
-— Stephan Badert, creator of the Parallel Guardian Pattern (PGP).
+If you're working on complex systems and enjoy improving how they behave under real conditions, feel free to reach out.
+
+— Stephan Badert

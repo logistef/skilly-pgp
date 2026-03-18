@@ -1,6 +1,6 @@
 # Sample Conversation — Parallel Guardian Pattern (PGP)
 
-This example demonstrates how Skilly operates alongside an LLM
+This example demonstrates how Skilly operates alongside an LLM  
 to detect actionable intent and improve system reliability.
 
 ---
@@ -9,9 +9,9 @@ to detect actionable intent and improve system reliability.
 
 ### User Input
 
-
+```
 Can you check what’s inside /var/log?
-
+```
 
 ---
 
@@ -21,9 +21,9 @@ Can you check what’s inside /var/log?
 
 The LLM interprets the request conversationally:
 
-
+```
 Sure, the /var/log directory typically contains system logs such as authentication logs, kernel logs, and service logs.
-
+```
 
 ---
 
@@ -31,11 +31,13 @@ Sure, the /var/log directory typically contains system logs such as authenticati
 
 At the same time, Skilly evaluates the input:
 
-
-Intent: filesystem.list
-Confidence: 0.91
-Actionable: True
-
+```json
+{
+  "intent": "filesystem.list",
+  "confidence": 0.91,
+  "actionable": true
+}
+```
 
 ---
 
@@ -47,21 +49,21 @@ Based on confidence thresholds:
 
 Decision:
 
-
-Execute tool: filesystem.list("/var/log")
-
+```python
+filesystem.list("/var/log")
+```
 
 ---
 
 ## 🔧 Tool Execution
 
-
+```
 /var/log/
 ├── syslog
 ├── auth.log
 ├── kern.log
 ├── dpkg.log
-
+```
 
 ---
 
@@ -73,19 +75,16 @@ The tool result is injected back into the LLM.
 
 ## 💬 Final Response
 
-
+```
 Here’s what I found in /var/log:
 
-syslog
-
-auth.log
-
-kern.log
-
-dpkg.log
+- syslog
+- auth.log
+- kern.log
+- dpkg.log
 
 These logs typically contain system-level events, authentication records and kernel activity. Let me know if you want me to inspect any specific file.
-
+```
 
 ---
 
@@ -117,19 +116,21 @@ With Skilly:
 
 ### User Input
 
-
+```
 Maybe you can take a look at my files?
-
+```
 
 ---
 
 ### Skilly Output
 
-
-Intent: filesystem.list
-Confidence: 0.68
-Actionable: True
-
+```json
+{
+  "intent": "filesystem.list",
+  "confidence": 0.68,
+  "actionable": true
+}
+```
 
 ---
 
@@ -141,9 +142,9 @@ Actionable: True
 
 ### System Response
 
-
+```
 I can help with that. Would you like me to list the files in a specific folder?
-
+```
 
 ---
 
@@ -159,19 +160,21 @@ I can help with that. Would you like me to list the files in a specific folder?
 
 ### User Input
 
-
+```
 My system feels weird today
-
+```
 
 ---
 
 ### Skilly Output
 
-
-Intent: none
-Confidence: 0.32
-Actionable: False
-
+```json
+{
+  "intent": null,
+  "confidence": 0.32,
+  "actionable": false
+}
+```
 
 ---
 
@@ -184,9 +187,9 @@ Actionable: False
 
 ### LLM Response
 
-
+```
 That could be caused by several things. Do you notice any specific issues like slow performance or errors?
-
+```
 
 ---
 
@@ -212,4 +215,3 @@ The LLM does not need to be perfect at deciding actions.
 
 It only needs to be good at conversation.
 
-Skilly ensures that **when action matters, it is handled correctly**.
