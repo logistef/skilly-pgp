@@ -1,1 +1,0 @@
-# Guardian agent skeleton
